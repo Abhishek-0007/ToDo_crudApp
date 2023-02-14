@@ -1,14 +1,16 @@
 ﻿using WebApplication1.DataAccessLayer.Entities;
+using WebApplication1.Models.RequestViewModel;
+using WebApplication1.Models.ResponseViewModel;
 
 namespace WebApplication1.Services.Interfaces
 {
     public interface ITodoService
     {
-        TodoItemEntity GetTodoItemById(int id);
-        Task<TodoItemEntity> AddTodoItem(TodoItemEntity todoItem);
-        Task<TodoItemEntity> UpdateTodoItem(TodoItemEntity todoItem);
-        TodoItemEntity DeleteTodoItem(int id);
-        Task<List<TodoItemEntity>> GetAllTodoItems();
+        TodoResponseViewModel GetTodoItemById(int id);
+        Task<TodoResponseViewModel> AddTodoItem(TodoRequestViewModel todoItem);
+        public void UpdateTodoItem(TodoRequestViewModel todoItem);
+        public void DeleteTodoItem(int id);
+        List<TodoResponseViewModel> GetAllTodoItems();
 
     }
 }

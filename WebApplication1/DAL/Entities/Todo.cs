@@ -1,6 +1,6 @@
-﻿namespace WebApplication1.Models
+﻿namespace WebApplication1.DataAccessLayer.Entities
 {
-    public class TodoItem
+    public class Todo
     {
         public int Id { get; set; }
         public string? Name { get; set; }

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebApplication1.DataAccessLayer;
 using WebApplication1.DataAccessLayer.Entities;
+using WebApplication1.Models.RequestViewModel;
+using WebApplication1.Models.ResponseViewModel;
 using WebApplication1.Services.Interfaces;
 
 namespace WebApplication1.Controllers
@@ -24,44 +20,42 @@ namespace WebApplication1.Controllers
 
         // GET: api/TodoItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoItemEntity>>> GetTodoItems()
+        public async Task<ActionResult<IEnumerable<TodoResponseViewModel>>> GetTodoItems()
         {
-            return await _service.GetAllTodoItems();
+            return _service.GetAllTodoItems();
         }
 
         // GET: api/TodoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItemEntity>> GetTodoItem(int id)
+        public async Task<ActionResult<TodoResponseViewModel>> GetTodoItem(int id)
         {
-            var todoItem = _service.GetTodoItemById(id);
-
-            if (todoItem == null)
-            {
-                return NotFound();
-            }
-
-            return todoItem;
+            return _service.GetTodoItemById(id);
         }
 
         // PUT: api/TodoItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(int id, TodoItemEntity todoItem)
+        public async Task<IActionResult> PutTodoItem(int id, TodoRequestViewModel todoItem)
         {
-            if (id != todoItem.Id)
+            var item = _service.GetAllTodoItems().Find(x => x.Id == id);
+
+            if (item.Id != todoItem.Id)
             {
                 return BadRequest();
             }
+            else
+            {
+                _service.UpdateTodoItem(todoItem);
+                return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+            }
 
-            await _service.UpdateTodoItem(todoItem);
-
-            return NoContent();
+            
         }
 
         // POST: api/TodoItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TodoItemEntity>> PostTodoItem(TodoItemEntity todoItem)
+        public async Task<ActionResult<Todo>> PostTodoItem(TodoRequestViewModel todoItem)
         {
             await _service.AddTodoItem(todoItem);
 
@@ -85,7 +79,7 @@ namespace WebApplication1.Controllers
 
         private bool TodoItemExists(int id)
         {
-            var listItems = _service.GetAllTodoItems().Result;
+            var listItems = _service.GetAllTodoItems();
             return listItems.Any(e => e.Id == id);
         }
     }

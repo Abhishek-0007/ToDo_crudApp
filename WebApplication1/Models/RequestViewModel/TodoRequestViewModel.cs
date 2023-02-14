@@ -1,6 +1,6 @@
-﻿namespace WebApplication1.Model
+﻿    namespace WebApplication1.Models.RequestViewModel
 {
-    public class TodoItemResponseModel
+    public class TodoRequestViewModel
     {
         public int Id { get; set; }
         public string? Name { get; set; }

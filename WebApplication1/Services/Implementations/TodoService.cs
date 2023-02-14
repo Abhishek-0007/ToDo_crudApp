@@ -1,6 +1,12 @@
 ﻿using WebApplication1.DataAccessLayer.Entities;
 using WebApplication1.DataAccessLayer.Repositories.Interfaces;
+using WebApplication1.Models.RequestViewModel;
+using WebApplication1.Models.ResponseViewModel;
 using WebApplication1.Services.Interfaces;
+using WebApplication1.Extensions;
+
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication1.Services.Implementations
 {
@@ -9,36 +15,55 @@ namespace WebApplication1.Services.Implementations
         private ITodoRepositoryInterface _repository;
 
         public TodoService(ITodoRepositoryInterface repository) { _repository = repository; }
-        public async Task<TodoItemEntity> AddTodoItem(TodoItemEntity todoItem)
+
+        PropertyInfo[] requestModelInfo = typeof(TodoRequestViewModel).GetProperties();
+        PropertyInfo[] responseModelInfo = typeof(TodoRequestViewModel).GetProperties();
+        PropertyInfo[] entityInfo = typeof(Todo).GetProperties();
+        Todo todo = new Todo();
+        TodoResponseViewModel todoResponseViewModel = new TodoResponseViewModel();
+
+        public async Task<TodoResponseViewModel> AddTodoItem(TodoRequestViewModel todoItem)
         {
-           await _repository.AddTodoItem(todoItem);
-           return todoItem;
+            var obj = todoItem.PropertyValueExtensionMethod<TodoRequestViewModel, Todo>() as Todo;
+            await _repository.AddTodoItem(obj);
+            return todo.PropertyValueExtensionMethod<Todo, TodoResponseViewModel>() as TodoResponseViewModel;
+        }
+
+        public async void UpdateTodoItem(TodoRequestViewModel todoItem)
+        {
+            var obj = todoItem.PropertyValueExtensionMethod<TodoRequestViewModel, Todo>() as Todo;
+            await _repository.UpdateTodoItem(obj);
 
         }
 
-        public TodoItemEntity DeleteTodoItem(int id)
+        public void DeleteTodoItem(int id)
         {
-            TodoItemEntity todoItem = _repository.GetTodoItemById(id);
-            if(todoItem != null) { _repository.DeleteTodoItem(id); }
+            todo = _repository.GetAllTodoItems().Result.Find(id => id.Equals(id));
+            if(todo != null) { _repository.DeleteTodoItem(id); }
 
-            return todoItem;
         }
 
-        public Task<List<TodoItemEntity>> GetAllTodoItems()
+ 
+
+        TodoResponseViewModel ITodoService.GetTodoItemById(int id)
         {
-            return _repository.GetAllTodoItems();
+            todo = _repository.GetAllTodoItems().Result.Find(id => id.Equals(id));
+            return todo.PropertyValueExtensionMethod<Todo, TodoResponseViewModel>() as TodoResponseViewModel;
         }
 
-        public TodoItemEntity GetTodoItemById(int id)
+        List<TodoResponseViewModel> ITodoService.GetAllTodoItems()
         {
-            TodoItemEntity todoItem = _repository.GetTodoItemById(id);
-            return todoItem;
-        }
+            var items = _repository.GetAllTodoItems().Result;
+            List<TodoResponseViewModel> result = new List<TodoResponseViewModel>();
 
-        public async Task<TodoItemEntity> UpdateTodoItem(TodoItemEntity todoItem)
-        {
-            await _repository.UpdateTodoItem(todoItem);
-            return todoItem;
+            foreach (Todo item in items)
+            {
+                var obj = item.PropertyValueExtensionMethod<Todo, TodoResponseViewModel>() as TodoResponseViewModel;
+
+                result.Add(obj);
+            }
+
+            return result;
         }
     }
 }

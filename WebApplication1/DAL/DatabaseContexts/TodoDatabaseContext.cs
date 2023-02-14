@@ -9,5 +9,5 @@ namespace WebApplication1.DataAccessLayer.DatabaseContexts;
         {
         }
 
-        public DbSet<TodoItemEntity> TodoItems { get; set; } = null!;
+        public DbSet<Todo> TodoItems { get; set; } = null!;
     }

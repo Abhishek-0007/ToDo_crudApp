@@ -1,6 +1,6 @@
-﻿namespace WebApplication1.DataAccessLayer.Entities
+﻿namespace WebApplication1.Models.ResponseViewModel
 {
-    public class TodoItemEntity
+    public class TodoResponseViewModel
     {
         public int Id { get; set; }
         public string? Name { get; set; }
