@@ -1,5 +1,4 @@
-﻿namespace WebApplication1.DataAccessLayer.Entites
-
+﻿namespace WebApplication1.DataAccessLayer.Entities
 {
     public class TodoItemEntity
     {

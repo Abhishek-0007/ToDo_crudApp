@@ -1,6 +1,6 @@
 ﻿using WebApplication1.DataAccessLayer.Repositories.Interfaces;
-using WebApplication1.Models;
 using WebApplication1.DataAccessLayer.DatabaseContexts;
+using Microsoft.EntityFrameworkCore;
 using WebApplication1.DataAccessLayer.Entities;
 
 namespace WebApplication1.DataAccessLayer.Repositories.Implementation
@@ -28,21 +28,23 @@ namespace WebApplication1.DataAccessLayer.Repositories.Implementation
 
         }
 
-        public List<TodoItemEntity> GetAllTodoItems()
+        public async Task<List<TodoItemEntity>> GetAllTodoItems()
         {
-            var items = _dbContext.TodoItems.ToList();
+            var items = await _dbContext.TodoItems.ToListAsync();
             return items;
         }
 
-        public Task<TodoItemEntity> GetTodoItemById(int id)
+        public TodoItemEntity GetTodoItemById(int id)
         {
-            return _dbContext.TodoItems.Find(id);
+            return  _dbContext.TodoItems.Find(id);
 
         }
 
-        public TodoItemEntity UpdateTodoItem(TodoItemEntity todoItem)
+        public async Task<TodoItemEntity> UpdateTodoItem(TodoItemEntity todoItem)
         {
-            throw new NotImplementedException();
+            _dbContext.Update(todoItem);
+            await _dbContext.SaveChangesAsync();
+            return todoItem;
         }
     }
 }
