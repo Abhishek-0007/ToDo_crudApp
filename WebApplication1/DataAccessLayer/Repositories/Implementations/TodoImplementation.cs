@@ -5,7 +5,7 @@ using WebApplication1.DataAccessLayer.Entities;
 
 namespace WebApplication1.DataAccessLayer.Repositories.Implementation
 {
-    public class TodoImplementation : ITodoRepository
+    public class TodoImplementation : ITodoRepositoryInterface
     {
         readonly private TodoDatabaseContext _dbContext;
         public TodoImplementation(TodoDatabaseContext dbContext) { _dbContext = dbContext; }
