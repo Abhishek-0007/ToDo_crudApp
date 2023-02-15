@@ -35,20 +35,19 @@ namespace WebApplication1.Controllers
         // PUT: api/TodoItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(int id, TodoRequestViewModel todoItem)
+        public async Task<ActionResult<TodoResponseViewModel>> PutTodoItem(int id, TodoRequestViewModel todoItem)
         {
-            var item = _service.GetAllTodoItems().Find(x => x.Id == id);
+            var items = _service.GetAllTodoItems();
 
-            if (item.Id != todoItem.Id)
+            foreach(TodoResponseViewModel item in items)
             {
-                return BadRequest();
+                if(item.Id == id)
+                {
+                    _service.UpdateTodoItem(todoItem);
+                    return NoContent();
+                }
             }
-            else
-            {
-                _service.UpdateTodoItem(todoItem);
-                return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
-            }
-
+            return BadRequest();
             
         }
 

@@ -10,7 +10,7 @@ namespace WebApplication1.Extensions
         {
             Type modelType = typeof(TModel);
             PropertyInfo[] modelProperties = modelType.GetProperties();
-            object modelObject = Activator.CreateInstance(modelType);
+            object? modelObject = Activator.CreateInstance(modelType);
 
             foreach (PropertyInfo modelProperty in modelProperties)
             {

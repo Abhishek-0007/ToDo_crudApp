@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication1.DataAccessLayer.Entities;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
+using WebApplication1.Extensions;
 
 namespace WebApplication1.DataAccessLayer.Repositories.Implementation
 {
@@ -18,15 +20,16 @@ namespace WebApplication1.DataAccessLayer.Repositories.Implementation
             return todoItem;
         }
 
-        public Todo DeleteTodoItem(int id)
+        public async void DeleteTodoItem(int id)
         {
             var items = _dbContext.TodoItems;
             foreach (var item in items)
             {
-                if (item.Id == id) { _dbContext.Remove(item); }
+                if (item.Id == id) { 
+                    _dbContext.Remove(item);
+                    await _dbContext.SaveChangesAsync();
+                }
             }
-
-            return _dbContext.TodoItems.Find(id);
 
         }
 
@@ -39,13 +42,7 @@ namespace WebApplication1.DataAccessLayer.Repositories.Implementation
 
         public Todo GetTodoItemById(int id)
         {
-            var items = _dbContext.TodoItems;
-            Todo todoItem = null;
-            foreach (var item in items)
-            {
-                if (item.Id == id) { todoItem = item; }
-            }
-
+            Todo todoItem = _dbContext.TodoItems.Where(t => t.Id.Equals(id)).FirstOrDefault();
             return todoItem;
 
         }
@@ -53,12 +50,13 @@ namespace WebApplication1.DataAccessLayer.Repositories.Implementation
         public async Task<Todo> UpdateTodoItem(Todo todoItem)
         {
 
-            var items = _dbContext.TodoItems;
-            foreach (var item in items)
-            {
-                if (item.Id == todoItem.Id) { _dbContext.Update(todoItem); }
-            }
-            await _dbContext.SaveChangesAsync();
+            var previoudItem = _dbContext.TodoItems.Where(t => t.Id.Equals(todoItem.Id)).FirstOrDefault();
+
+            previoudItem.Name = todoItem.Name;
+            previoudItem.isComplete = todoItem.isComplete;
+
+            _dbContext.SaveChangesAsync();
+
             return todoItem;
         }
     }

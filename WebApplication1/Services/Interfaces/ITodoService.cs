@@ -8,7 +8,7 @@ namespace WebApplication1.Services.Interfaces
     {
         TodoResponseViewModel GetTodoItemById(int id);
         Task<TodoResponseViewModel> AddTodoItem(TodoRequestViewModel todoItem);
-        public void UpdateTodoItem(TodoRequestViewModel todoItem);
+        public TodoResponseViewModel UpdateTodoItem(TodoRequestViewModel todoItem);
         public void DeleteTodoItem(int id);
         List<TodoResponseViewModel> GetAllTodoItems();
 

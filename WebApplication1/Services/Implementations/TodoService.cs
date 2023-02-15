@@ -5,8 +5,6 @@ using WebApplication1.Models.ResponseViewModel;
 using WebApplication1.Services.Interfaces;
 using WebApplication1.Extensions;
 
-using System.Reflection;
-using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication1.Services.Implementations
 {
@@ -16,11 +14,7 @@ namespace WebApplication1.Services.Implementations
 
         public TodoService(ITodoRepositoryInterface repository) { _repository = repository; }
 
-        PropertyInfo[] requestModelInfo = typeof(TodoRequestViewModel).GetProperties();
-        PropertyInfo[] responseModelInfo = typeof(TodoRequestViewModel).GetProperties();
-        PropertyInfo[] entityInfo = typeof(Todo).GetProperties();
         Todo todo = new Todo();
-        TodoResponseViewModel todoResponseViewModel = new TodoResponseViewModel();
 
         public async Task<TodoResponseViewModel> AddTodoItem(TodoRequestViewModel todoItem)
         {
@@ -29,17 +23,18 @@ namespace WebApplication1.Services.Implementations
             return todo.PropertyValueExtensionMethod<Todo, TodoResponseViewModel>() as TodoResponseViewModel;
         }
 
-        public async void UpdateTodoItem(TodoRequestViewModel todoItem)
+        public TodoResponseViewModel UpdateTodoItem(TodoRequestViewModel todoItem)
         {
             var obj = todoItem.PropertyValueExtensionMethod<TodoRequestViewModel, Todo>() as Todo;
-            await _repository.UpdateTodoItem(obj);
+            _repository.UpdateTodoItem(obj);    
 
+            return obj.PropertyValueExtensionMethod<Todo, TodoResponseViewModel>() as TodoResponseViewModel;
         }
 
         public void DeleteTodoItem(int id)
         {
-            todo = _repository.GetAllTodoItems().Result.Find(id => id.Equals(id));
-            if(todo != null) { _repository.DeleteTodoItem(id); }
+            todo = _repository.GetAllTodoItems().Result.Where(t => t.Id.Equals(id)).FirstOrDefault();
+            if (todo != null) { _repository.DeleteTodoItem(id); }
 
         }
 
@@ -47,7 +42,7 @@ namespace WebApplication1.Services.Implementations
 
         TodoResponseViewModel ITodoService.GetTodoItemById(int id)
         {
-            todo = _repository.GetAllTodoItems().Result.Find(id => id.Equals(id));
+            todo = _repository.GetAllTodoItems().Result.Where(t => t.Id.Equals(id)).FirstOrDefault();
             return todo.PropertyValueExtensionMethod<Todo, TodoResponseViewModel>() as TodoResponseViewModel;
         }
 

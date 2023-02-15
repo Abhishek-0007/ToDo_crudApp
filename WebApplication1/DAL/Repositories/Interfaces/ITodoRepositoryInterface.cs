@@ -8,7 +8,7 @@ namespace WebApplication1.DataAccessLayer.Repositories.Interfaces
         Todo GetTodoItemById(int id);
         Task<Todo> AddTodoItem(Todo todoItem);
         Task<Todo> UpdateTodoItem(Todo todoItem);
-        Todo DeleteTodoItem(int id);
+        public void DeleteTodoItem(int id);
         Task<List<Todo>> GetAllTodoItems();
 
     }
