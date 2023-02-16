@@ -10,9 +10,9 @@ namespace WebApplication1.Services.Implementations
 {
     public class TodoService : ITodoService
     {
-        private ITodoRepositoryInterface _repository;
+        private ITodoRepository _repository;
 
-        public TodoService(ITodoRepositoryInterface repository) { _repository = repository; }
+        public TodoService(ITodoRepository repository) { _repository = repository; }
 
         Todo todo = new Todo();
 

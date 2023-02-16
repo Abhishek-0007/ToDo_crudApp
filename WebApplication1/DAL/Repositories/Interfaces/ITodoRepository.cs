@@ -3,7 +3,7 @@ using WebApplication1.DataAccessLayer.Entities;
 
 namespace WebApplication1.DataAccessLayer.Repositories.Interfaces
 {
-    public interface ITodoRepositoryInterface
+    public interface ITodoRepository
     {
         Todo GetTodoItemById(int id);
         Task<Todo> AddTodoItem(Todo todoItem);

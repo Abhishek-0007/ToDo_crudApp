@@ -5,10 +5,10 @@ using WebApplication1.DataAccessLayer.Entities;
 
 namespace WebApplication1.DataAccessLayer.Repositories.Implementation
 {
-    public class TodoImplementation : ITodoRepositoryInterface
+    public class TodoRepository : ITodoRepository
     {
         readonly private TodoDatabaseContext _dbContext;
-        public TodoImplementation(TodoDatabaseContext dbContext) { _dbContext = dbContext; }
+        public TodoRepository(TodoDatabaseContext dbContext) { _dbContext = dbContext; }
         public async Task<Todo> AddTodoItem(Todo todoItem)
         {
             _dbContext.Add(todoItem);
