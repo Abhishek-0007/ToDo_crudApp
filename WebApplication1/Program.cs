@@ -15,7 +15,7 @@ builder.Services.AddDbContext<TodoDatabaseContext>(opt =>
     opt.UseInMemoryDatabase("TodoList"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddScoped<ITodoRepositoryInterface, TodoImplementation>();
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 builder.Services.AddTransient<ITodoService, TodoService>();
 builder.Services.AddSwaggerGen();
 

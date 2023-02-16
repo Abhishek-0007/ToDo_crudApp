@@ -18,13 +18,11 @@ namespace WebApplication1.DataAccessLayer.Repositories.Implementation
 
         public async void DeleteTodoItem(int id)
         {
-            var items = _dbContext.TodoItems;
-            foreach (var item in items)
+            Todo todoItem = _dbContext.TodoItems.Where(t => t.Id.Equals(id)).FirstOrDefault();
+            if(todoItem != null)
             {
-                if (item.Id == id) { 
-                    _dbContext.Remove(item);
-                    await _dbContext.SaveChangesAsync();
-                }
+                _dbContext.Remove(todoItem);
+                await _dbContext.SaveChangesAsync();
             }
 
         }
@@ -48,8 +46,11 @@ namespace WebApplication1.DataAccessLayer.Repositories.Implementation
 
             var previoudItem = _dbContext.TodoItems.Where(t => t.Id.Equals(todoItem.Id)).FirstOrDefault();
 
-            previoudItem.Name = todoItem.Name;
-            previoudItem.isComplete = todoItem.isComplete;
+            if(previoudItem != null)
+            {
+                previoudItem.Name = todoItem.Name;
+                previoudItem.isComplete = todoItem.isComplete;
+            }
 
             await _dbContext.SaveChangesAsync();
 
