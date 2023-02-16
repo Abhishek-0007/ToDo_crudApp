@@ -2,10 +2,6 @@
 using WebApplication1.DataAccessLayer.DatabaseContexts;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.DataAccessLayer.Entities;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
-using WebApplication1.Extensions;
 
 namespace WebApplication1.DataAccessLayer.Repositories.Implementation
 {
@@ -55,7 +51,7 @@ namespace WebApplication1.DataAccessLayer.Repositories.Implementation
             previoudItem.Name = todoItem.Name;
             previoudItem.isComplete = todoItem.isComplete;
 
-            _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
             return todoItem;
         }
