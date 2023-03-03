@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.DAL.Repositories;
 using WebApplication1.Models;
+using WebApplication1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,10 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<TodoContext>(opt =>
-    opt.UseInMemoryDatabase("TodoList"));
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("ConnString")));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
+
+builder.Services.AddTransient<ITodoService, TodoService>(); 
 
 var app = builder.Build();
 
