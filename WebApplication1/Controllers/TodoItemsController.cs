@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +16,16 @@ namespace WebApplication1.Controllers
     public class TodoItemsController : ControllerBase
     {
         private readonly ITodoService _service;
+        private readonly IAuthService _authService;
 
         public TodoItemsController(IServiceProvider serviceProvider)
         {
             _service = serviceProvider.GetRequiredService<ITodoService>();
+            _authService = serviceProvider.GetRequiredService<IAuthService>();
         }
 
         // GET: api/TodoItems
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<TodoItem>> GetTodoItems()
         {
@@ -29,6 +33,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: api/TodoItems/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<TodoItem> GetTodoItem(int id)
         {
@@ -37,6 +42,7 @@ namespace WebApplication1.Controllers
 
         // PUT: api/TodoItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> PutTodoItem(TodoItem todoItem)
         {
@@ -45,14 +51,16 @@ namespace WebApplication1.Controllers
         }
 
         // POST: api/TodoItems
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754 
         [HttpPost]
         public async Task<IActionResult> PostTodoItem(TodoItem todoItem)
         {
+            Console.WriteLine(_authService.GetJwtToken());
             return await _service.AddTodoAsync(todoItem);
         }
 
         // DELETE: api/TodoItems/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodoItem(int id)
         {
