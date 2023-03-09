@@ -12,8 +12,12 @@ namespace WebApplication1.Models
         [Required]
         public string Name { get; set; }
         public string? Description { get; set; }
-        public bool? isComplete { get; set; }
-        public DateTime? CreatedAt { get; set; }
+
+        [JsonIgnore]
+        public bool? isComplete { get; set; } = false;
+
+        [JsonIgnore]
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
     }
 }

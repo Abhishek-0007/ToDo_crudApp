@@ -15,20 +15,18 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class TodoItemsController : ControllerBase
     {
-        private readonly ITodoService _service;
-        private readonly IAuthService _authService;
+        private readonly ITodoService _service; 
 
         public TodoItemsController(IServiceProvider serviceProvider)
         {
-            _service = serviceProvider.GetRequiredService<ITodoService>();
-            _authService = serviceProvider.GetRequiredService<IAuthService>();
+            _service = serviceProvider.GetRequiredService<ITodoService>(); 
         }
 
-        // GET: api/TodoItems
-        [Authorize]
+        // GET: api/TodoItems 
         [HttpGet]
+        [Authorize]
         public async Task<IEnumerable<TodoItem>> GetTodoItems()
-        {
+        { 
             return await _service.GetAllTodoAsync();
         }
 
@@ -52,10 +50,10 @@ namespace WebApplication1.Controllers
 
         // POST: api/TodoItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> PostTodoItem(TodoItem todoItem)
         {
-            Console.WriteLine(_authService.GetJwtToken());
             return await _service.AddTodoAsync(todoItem);
         }
 
